@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'loading.dart';
+import 'home.dart';
+import 'news.dart';
+import 'add.dart';
+import 'base.dart';
+import 'profile.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,28 +26,30 @@ class MyApp extends StatelessWidget {
       ),
       home: const SplashScreen(),
       routes: {
-        '/home': (context) => const MyHomePage(title: 'dDNA CORE'),
+        '/home': (context) => const MainScreen(title: 'dDNA CORE'),
       },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key, required this.title});
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _MainScreenState extends State<MainScreen> {
+  int _currentIndex = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  final List<Widget> _screens = [
+    const HomeScreen(),
+    const NewsScreen(),
+    const AddScreen(),
+    const DatabaseScreen(),
+    const ProfileScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -60,44 +67,45 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'SYSTEM ACCESS LEVEL:',
-              style: TextStyle(color: Colors.white70, fontSize: 16),
+      body: _screens[_currentIndex],
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          border: Border(top: BorderSide(color: Colors.white24, width: 0.5)),
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) => setState(() => _currentIndex = index),
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.black,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.white54,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              activeIcon: Icon(Icons.home),
+              label: 'Home',
             ),
-            const SizedBox(height: 10),
-            Text(
-              '$_counter',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 72,
-                fontWeight: FontWeight.w300,
-              ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.article_outlined),
+              activeIcon: Icon(Icons.article),
+              label: 'News',
             ),
-            const SizedBox(height: 30),
-            SizedBox(
-              width: 200,
-              child: ElevatedButton(
-                onPressed: _incrementCounter,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  side: const BorderSide(color: Colors.white, width: 1),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                ),
-                child: const Text(
-                  'TAP',
-                  style: TextStyle(
-                    color: Colors.white,
-                    letterSpacing: 2,
-                  ),
-                ),
-              ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add_circle_outline, size: 32),
+              activeIcon: Icon(Icons.add_circle, size: 32),
+              label: 'Add',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.storage_outlined),
+              activeIcon: Icon(Icons.storage),
+              label: 'Database',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outlined),
+              activeIcon: Icon(Icons.person),
+              label: 'Profile',
             ),
           ],
         ),

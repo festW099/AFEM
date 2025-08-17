@@ -99,7 +99,7 @@ class _SplashScreenState extends State<SplashScreen>
             ),
           ),
 
-          // Хакерская сетка
+          // Cетка
           Positioned.fill(
             child: AnimatedBuilder(
               animation: _controller,
