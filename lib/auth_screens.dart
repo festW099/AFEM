@@ -10,7 +10,7 @@ class PasswordSetupScreen extends StatefulWidget {
 }
 
 class _PasswordSetupScreenState extends State<PasswordSetupScreen> 
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   String _enteredPassword = '';
   String _confirmPassword = '';
   bool _isSettingPassword = true;
@@ -496,7 +496,7 @@ class _NumberButton extends StatefulWidget {
 }
 
 class __NumberButtonState extends State<_NumberButton> 
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<double> _opacityAnimation;
@@ -620,7 +620,7 @@ class _BackspaceButton extends StatefulWidget {
 }
 
 class __BackspaceButtonState extends State<_BackspaceButton> 
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<double> _opacityAnimation;

@@ -28,6 +28,9 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  sqflite: ^2.3.0
+  path: ^1.8.0
+  http: ^0.13.5
   shared_preferences: ^2.2.2
   flutter:
     sdk: flutter
