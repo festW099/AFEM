@@ -6,7 +6,7 @@ import 'news.dart';
 import 'add.dart';
 import 'base.dart';
 import 'profile.dart';
-import 'auth_screens.dart'; // Add this import
+import 'auth_screens.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

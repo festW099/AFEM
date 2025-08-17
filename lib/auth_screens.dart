@@ -98,7 +98,7 @@ class _PasswordSetupScreenState extends State<PasswordSetupScreen>
           if (_confirmPassword == _enteredPassword) {
             _savePassword();
           } else {
-            _errorMessage = 'Passcodes do not match';
+            _errorMessage = 'Passwords do not match';
             _enteredPassword = '';
             _confirmPassword = '';
             _isSettingPassword = true;
@@ -142,18 +142,6 @@ class _PasswordSetupScreenState extends State<PasswordSetupScreen>
             ),
             color: isFilled ? Colors.white : Colors.transparent,
           ),
-          child: isFilled ? ScaleTransition(
-            scale: Tween(begin: 0.0, end: 1.0).animate(
-              CurvedAnimation(
-                parent: _shakeController,
-                curve: Interval(
-                  0.0,
-                  0.3,
-                  curve: Curves.elasticOut,
-                ),
-              ),
-            ),
-          ) : null,
         );
       }),
     );
@@ -206,7 +194,7 @@ class _PasswordSetupScreenState extends State<PasswordSetupScreen>
                         );
                       },
                       child: Text(
-                        _isSettingPassword ? 'Create Passcode' : 'Confirm Passcode',
+                        _isSettingPassword ? 'Create Password' : 'Confirm Password',
                         key: ValueKey(_isSettingPassword),
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.7),
@@ -240,7 +228,7 @@ class _PasswordSetupScreenState extends State<PasswordSetupScreen>
                   _errorMessage,
                   key: ValueKey(_errorMessage),
                   style: TextStyle(
-                    color: _errorMessage == '✓' ? Colors.green : Colors.red,
+                    color: _errorMessage == '' ? Colors.green : Colors.red,
                     fontSize: 14,
                   ),
                 ),
@@ -350,7 +338,7 @@ class _PasswordEntryScreenState extends State<PasswordEntryScreen>
       Navigator.pushReplacementNamed(context, '/splash');
     } else {
       setState(() {
-        _errorMessage = 'Incorrect passcode';
+        _errorMessage = 'Incorrect password';
         _enteredPassword = '';
       });
       _shakeController.forward(from: 0);
@@ -395,18 +383,6 @@ class _PasswordEntryScreenState extends State<PasswordEntryScreen>
             ),
             color: isFilled ? Colors.white : Colors.transparent,
           ),
-          child: isFilled ? ScaleTransition(
-            scale: Tween(begin: 0.0, end: 1.0).animate(
-              CurvedAnimation(
-                parent: _shakeController,
-                curve: Interval(
-                  0.0,
-                  0.3,
-                  curve: Curves.elasticOut,
-                ),
-              ),
-            ),
-          ) : null,
         );
       }),
     );
@@ -482,7 +458,7 @@ class _PasswordEntryScreenState extends State<PasswordEntryScreen>
   }
 }
 
-class _NumberButton extends StatefulWidget {
+class _NumberButton extends StatelessWidget {
   final int number;
   final Function(int) onPressed;
 
@@ -492,123 +468,30 @@ class _NumberButton extends StatefulWidget {
   });
 
   @override
-  __NumberButtonState createState() => __NumberButtonState();
-}
-
-class __NumberButtonState extends State<_NumberButton> 
-    with TickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
-  late Animation<double> _opacityAnimation;
-  late Animation<Color?> _colorAnimation;
-  late Animation<double> _elevationAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-    
-    _scaleAnimation = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 1.0, end: 0.85), weight: 40),
-      TweenSequenceItem(tween: Tween(begin: 0.85, end: 1.05), weight: 30),
-      TweenSequenceItem(tween: Tween(begin: 1.05, end: 0.98), weight: 15),
-      TweenSequenceItem(tween: Tween(begin: 0.98, end: 1.0), weight: 15),
-    ]).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
-    
-    _opacityAnimation = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 0.7, end: 1.0), weight: 1),
-    ]).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Interval(0.1, 1.0, curve: Curves.easeOut),
-    ));
-    
-    _colorAnimation = ColorTween(
-      begin: Colors.transparent,
-      end: Colors.white.withOpacity(0.1),
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
-    
-    _elevationAnimation = Tween<double>(begin: 0, end: 8).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeOut,
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _onTap() {
-    _controller.forward().then((_) {
-      _controller.reverse();
-      widget.onPressed(widget.number);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTapDown: (_) => _controller.forward(),
-      onTapUp: (_) => _controller.reverse(),
-      onTapCancel: () => _controller.reverse(),
-      onTap: _onTap,
-      child: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, child) {
-          return Transform.scale(
-            scale: _scaleAnimation.value,
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: _colorAnimation.value,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white.withOpacity(0.2 * _controller.value),
-                    blurRadius: _elevationAnimation.value,
-                    spreadRadius: _elevationAnimation.value / 2,
-                  ),
-                ],
-              ),
-              child: Center(
-                child: Opacity(
-                  opacity: _opacityAnimation.value,
-                  child: Text(
-                    widget.number.toString(),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 28,
-                      fontWeight: FontWeight.w300,
-                      shadows: [
-                        Shadow(
-                          color: Colors.white.withOpacity(0.3 * _controller.value),
-                          blurRadius: 10 * _controller.value,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+      onTap: () => onPressed(number),
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.transparent,
+        ),
+        child: Center(
+          child: Text(
+            number.toString(),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 28,
+              fontWeight: FontWeight.w300,
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }
 }
 
-class _BackspaceButton extends StatefulWidget {
+class _BackspaceButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const _BackspaceButton({
@@ -616,104 +499,21 @@ class _BackspaceButton extends StatefulWidget {
   });
 
   @override
-  __BackspaceButtonState createState() => __BackspaceButtonState();
-}
-
-class __BackspaceButtonState extends State<_BackspaceButton> 
-    with TickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
-  late Animation<double> _opacityAnimation;
-  late Animation<Color?> _colorAnimation;
-  late Animation<double> _rotationAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 400),
-      vsync: this,
-    );
-    
-    _scaleAnimation = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 1.0, end: 0.8), weight: 40),
-      TweenSequenceItem(tween: Tween(begin: 0.8, end: 1.1), weight: 30),
-      TweenSequenceItem(tween: Tween(begin: 1.1, end: 1.0), weight: 30),
-    ]).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
-    
-    _opacityAnimation = Tween<double>(begin: 0.7, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Interval(0.1, 1.0, curve: Curves.easeOut),
-      ),
-    );
-    
-    _colorAnimation = ColorTween(
-      begin: Colors.transparent,
-      end: Colors.white.withOpacity(0.1),
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
-    
-    _rotationAnimation = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 0.0, end: -0.1), weight: 50),
-      TweenSequenceItem(tween: Tween(begin: -0.1, end: 0.05), weight: 30),
-      TweenSequenceItem(tween: Tween(begin: 0.05, end: 0.0), weight: 20),
-    ]).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _onTap() {
-    _controller.forward().then((_) {
-      _controller.reverse();
-      widget.onPressed();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTapDown: (_) => _controller.forward(),
-      onTapUp: (_) => _controller.reverse(),
-      onTapCancel: () => _controller.reverse(),
-      onTap: _onTap,
-      child: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, child) {
-          return Transform(
-            transform: Matrix4.identity()
-              ..scale(_scaleAnimation.value)
-              ..rotateZ(_rotationAnimation.value),
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: _colorAnimation.value,
-              ),
-              child: Center(
-                child: Opacity(
-                  opacity: _opacityAnimation.value,
-                  child: const Icon(
-                    Icons.backspace,
-                    color: Colors.white,
-                    size: 28,
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
+      onTap: onPressed,
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.transparent,
+        ),
+        child: Center(
+          child: Icon(
+            Icons.backspace,
+            color: Colors.white,
+            size: 28,
+          ),
+        ),
       ),
     );
   }
