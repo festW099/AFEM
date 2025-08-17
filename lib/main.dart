@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'loading.dart';
 import 'home.dart';
 import 'news.dart';
 import 'add.dart';
 import 'base.dart';
 import 'profile.dart';
+import 'auth_screens.dart'; // Add this import
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  final isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
+  runApp(MyApp(isFirstLaunch: isFirstLaunch));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isFirstLaunch;
+  
+  const MyApp({super.key, required this.isFirstLaunch});
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +31,10 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const SplashScreen(),
+      home: isFirstLaunch ? const PasswordSetupScreen() : const PasswordEntryScreen(),
       routes: {
         '/home': (context) => const MainScreen(title: 'dDNA CORE'),
+        '/splash': (context) => const SplashScreen(),
       },
     );
   }
