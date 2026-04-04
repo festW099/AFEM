@@ -7,7 +7,7 @@ class NewsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Center(
       child: Text(
-        'NEWS FEED',
+        'NEWS',
         style: TextStyle(color: Colors.white, fontSize: 24),
       ),
     );
