@@ -1,6 +1,7 @@
 import 'dart:io';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -49,6 +50,19 @@ Future<String?> pickAndSaveImage() async {
   final savedImage = await File(picked.path).copy('${dir.path}/$fileName.jpg');
 
   return savedImage.path;
+}
+
+Future<String?> saveBase64Image(String base64String) async {
+  try {
+    final bytes = base64Decode(base64String);
+    final dir = await getApplicationDocumentsDirectory();
+    final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    final file = File('${dir.path}/$fileName.jpg');
+    await file.writeAsBytes(bytes);
+    return file.path;
+  } catch (e) {
+    return null;
+  }
 }
 
 class AddScreen extends StatefulWidget {
@@ -146,6 +160,50 @@ class _AddScreenState extends State<AddScreen> with TickerProviderStateMixin {
     });
   }
 
+  Future<void> importProfile() async {
+    final clipboardData = await Clipboard.getData('text/plain');
+    if (clipboardData == null || clipboardData.text == null) return;
+
+    final jsonString = clipboardData.text!;
+    Map<String, dynamic> data;
+    try {
+      data = jsonDecode(jsonString) as Map<String, dynamic>;
+    } catch (e) {
+      return;
+    }
+
+    final firstName = data['firstName'] ?? '';
+    final lastName = data['lastName'] ?? '';
+    if (firstName.isEmpty && lastName.isEmpty) return;
+
+    for (var c in notes) {
+      c.dispose();
+    }
+    notes.clear();
+
+    firstNameController.text = firstName;
+    lastNameController.text = lastName;
+    middleNameController.text = data['middleName'] ?? '';
+    descriptionController.text = data['description'] ?? '';
+
+    final notesList = data['notes'] as List? ?? [];
+    for (var noteText in notesList) {
+      notes.add(TextEditingController(text: noteText));
+    }
+
+    String? newImagePath;
+    if (data['imageBase64'] != null && data['imageBase64'].toString().isNotEmpty) {
+      newImagePath = await saveBase64Image(data['imageBase64']);
+    }
+
+    setState(() {
+      imagePath = newImagePath;
+      if (newImagePath != null) {
+        _imageController.forward(from: 0);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -230,24 +288,48 @@ class _AddScreenState extends State<AddScreen> with TickerProviderStateMixin {
                   ),
                 ),
                 const SizedBox(height: 20),
-                OutlinedButton(
-                  onPressed: saveProfile,
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    side: const BorderSide(color: Colors.white),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 50, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    OutlinedButton(
+                      onPressed: saveProfile,
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        side: const BorderSide(color: Colors.white),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30, vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: const Text(
+                        'СОХРАНИТЬ',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 1.5),
+                      ),
                     ),
-                  ),
-                  child: const Text(
-                    'СОХРАНИТЬ',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 1.5),
-                  ),
+                    OutlinedButton(
+                      onPressed: importProfile,
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        side: const BorderSide(color: Colors.white),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30, vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: const Text(
+                        'ИМПОРТ',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 1.5),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 30),
               ],

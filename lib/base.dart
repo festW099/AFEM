@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'add.dart';
 
 class DatabaseScreen extends StatefulWidget {
@@ -145,10 +147,6 @@ class _DatabaseScreenState extends State<DatabaseScreen> {
                   '${p['lastName'] ?? ''} ${p['firstName'] ?? ''}',
                   style: const TextStyle(color: Colors.white),
                 ),
-                subtitle: Text(
-                  p['description'] ?? '',
-                  style: const TextStyle(color: Colors.white54),
-                ),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -212,7 +210,6 @@ class _DatabaseScreenState extends State<DatabaseScreen> {
   }
 }
 
-
 class ProfileDetailScreen extends StatefulWidget {
   final Map<String, dynamic> profile;
 
@@ -247,11 +244,47 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
     });
   }
 
+  Future<void> _shareProfile() async {
+    final Map<String, dynamic> exportData = {
+      'firstName': widget.profile['firstName'] ?? '',
+      'lastName': widget.profile['lastName'] ?? '',
+      'middleName': widget.profile['middleName'] ?? '',
+      'description': widget.profile['description'] ?? '',
+      'notes': notes,
+    };
+
+    if (imagePath != null && File(imagePath!).existsSync()) {
+      try {
+        final bytes = await File(imagePath!).readAsBytes();
+        exportData['imageBase64'] = base64Encode(bytes);
+      } catch (e) {
+      }
+    }
+
+    final jsonString = jsonEncode(exportData);
+    await Clipboard.setData(ClipboardData(text: jsonString));
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Код профиля скопирован в буфер обмена')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(backgroundColor: Colors.black),
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.share, color: Colors.white),
+            onPressed: _shareProfile,
+            tooltip: 'Поделиться',
+          ),
+        ],
+      ),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -324,6 +357,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
     );
   }
 }
+
 class EditProfileScreen extends StatefulWidget {
   final Map<String, dynamic> profile;
 
