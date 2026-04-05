@@ -1,16 +1,52 @@
-# first
+# dDNA
 
-A new Flutter project.
+**dDNA** (digital DNA) — это приложение, которое помогает запоминать людей.  
+Оно создано для тех, кто часто забывает имена, интересы или детали разговоров с друзьями, коллегами или знакомыми.
 
-## Getting Started
+> Больше никаких неловких моментов, когда вы не можете вспомнить, о чем говорили в прошлый раз.  
+> dDNA бережно хранит «цифровую ДНК» каждого человека в вашем круге общения.
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## Проблема, которую решает dDNA
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Вы помните лицо, но имя вылетает из головы за секунду до приветствия.
+- Друг рассказывал о своем хобби, новом проекте или любимой книге — а вы не можете вспомнить детали.
+- В компании из 10 человек вы теряете нить разговора, потому что путаете, кто чем увлекается.
+- Стыдно переспрашивать одно и то же.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## Для кого это приложение
+
+- Люди с мягкой забывчивостью или лёгкими когнитивными трудностями.
+- Профессионалы, работающие с большим количеством людей (продажи, HR, врачи, преподаватели).
+- Экспаты и переехавшие — кто строит новый круг общения с нуля.
+- Интроверты, которым сложно удерживать в голове много социальной информации.
+- Все, кто ценит внимание к деталям и хочет быть **лучшим другом**.
+
+---
+
+## Как начать использовать
+
+### 1. Установка
+
+bash```
+git clone https://github.com/yourusername/ddna.git
+cd ddna
+flutter pub get
+flutter run```
+
+---
+
+## Вклад в проект
+
+Вы можете помочь:
+- сообщить об идее или ошибке через [Issues](https://github.com/yourusername/ddna/issues)
+- предложить дизайн-улучшения
+- помочь с тестированием, если у вас есть особенности памяти или внимания
+
+---
+
+## Лицензия
+MIT — свободно используйте, изучайте код и дорабатывайте под себя.
