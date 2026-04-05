@@ -6,14 +6,13 @@ import 'news.dart';
 import 'add.dart';
 import 'base.dart';
 import 'profile.dart';
-import 'auth_screens.dart'; // Убедитесь, что этот файл существует
+import 'auth_screens.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   final isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
   
-  // Сохраняем, что приложение уже запускалось
   if (isFirstLaunch) {
     await prefs.setBool('isFirstLaunch', false);
   }
@@ -32,7 +31,6 @@ class MyApp extends StatelessWidget {
       title: 'dDNA',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // ЧЕРНО-БЕЛАЯ ТЕМА
         brightness: Brightness.dark,
         primaryColor: Colors.black,
         scaffoldBackgroundColor: Colors.black,
@@ -41,7 +39,7 @@ class MyApp extends StatelessWidget {
           secondary: Colors.white,
           surface: Colors.black,
           background: Colors.black,
-          error: Colors.redAccent, // ошибки лучше оставить красными для наглядности
+          error: Colors.redAccent,
           onPrimary: Colors.white,
           onSecondary: Colors.black,
           onSurface: Colors.white,
@@ -50,7 +48,6 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
         
-        // AppBar тема
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.black,
           foregroundColor: Colors.white,
@@ -64,7 +61,6 @@ class MyApp extends StatelessWidget {
           iconTheme: IconThemeData(color: Colors.white),
         ),
         
-        // Текст
         textTheme: const TextTheme(
           bodyLarge: TextStyle(color: Colors.white),
           bodyMedium: TextStyle(color: Colors.white70),
@@ -72,7 +68,6 @@ class MyApp extends StatelessWidget {
           titleMedium: TextStyle(color: Colors.white),
         ),
         
-        // Кнопки
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.white,
@@ -91,12 +86,10 @@ class MyApp extends StatelessWidget {
           ),
         ),
         
-        // Иконки
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),
         
-        // BottomNavigationBar тема (глобально)
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: Colors.black,
           selectedItemColor: Colors.white,
@@ -105,13 +98,11 @@ class MyApp extends StatelessWidget {
           elevation: 0,
         ),
         
-        // Индикатор прогресса
         progressIndicatorTheme: const ProgressIndicatorThemeData(
           color: Colors.white,
           linearTrackColor: Colors.white24,
         ),
         
-        // Switch
         switchTheme: SwitchThemeData(
           thumbColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.selected)) {
@@ -127,7 +118,6 @@ class MyApp extends StatelessWidget {
           }),
         ),
         
-        // Input поля
         inputDecorationTheme: const InputDecorationTheme(
           enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.white24),
