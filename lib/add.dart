@@ -65,6 +65,35 @@ Future<String?> saveBase64Image(String base64String) async {
   }
 }
 
+String _unescape(String s) => s.replaceAll('\\n', '\n');
+
+Map<String, dynamic> decodeProfileFromText(String text) {
+  final lines = text.split('\n');
+  if (lines.isEmpty) throw Exception('Empty data');
+  if (lines.last.isEmpty) lines.removeLast();
+  if (lines.length < 6) throw Exception('Invalid format');
+
+  final firstName = _unescape(lines[0]);
+  final lastName = _unescape(lines[1]);
+  final middleName = _unescape(lines[2]);
+  final description = _unescape(lines[3]);
+  final imageBase64 = lines[4];
+  final notesCount = int.tryParse(lines[5]) ?? 0;
+  final notes = <String>[];
+  for (int i = 0; i < notesCount; i++) {
+    if (6 + i >= lines.length) break;
+    notes.add(_unescape(lines[6 + i]));
+  }
+  return {
+    'firstName': firstName,
+    'lastName': lastName,
+    'middleName': middleName,
+    'description': description,
+    'imageBase64': imageBase64.isEmpty ? null : imageBase64,
+    'notes': notes,
+  };
+}
+
 class AddScreen extends StatefulWidget {
   const AddScreen({super.key});
 
@@ -164,10 +193,18 @@ class _AddScreenState extends State<AddScreen> with TickerProviderStateMixin {
     final clipboardData = await Clipboard.getData('text/plain');
     if (clipboardData == null || clipboardData.text == null) return;
 
-    final jsonString = clipboardData.text!;
+    final base64String = clipboardData.text!.trim();
+    String plainText;
+    try {
+      final bytes = base64Decode(base64String);
+      plainText = utf8.decode(bytes);
+    } catch (e) {
+      return;
+    }
+
     Map<String, dynamic> data;
     try {
-      data = jsonDecode(jsonString) as Map<String, dynamic>;
+      data = decodeProfileFromText(plainText);
     } catch (e) {
       return;
     }

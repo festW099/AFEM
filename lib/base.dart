@@ -4,6 +4,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'add.dart';
 
+String _escape(String s) => s.replaceAll('\n', '\\n').replaceAll('\r', '');
+
+String encodeProfileToText({
+  required String firstName,
+  required String lastName,
+  required String middleName,
+  required String description,
+  required List<String> notes,
+  required String? imageBase64,
+}) {
+  final buffer = StringBuffer();
+  buffer.writeln(_escape(firstName));
+  buffer.writeln(_escape(lastName));
+  buffer.writeln(_escape(middleName));
+  buffer.writeln(_escape(description));
+  buffer.writeln(imageBase64 ?? '');
+  buffer.writeln(notes.length);
+  for (final note in notes) {
+    buffer.writeln(_escape(note));
+  }
+  return buffer.toString();
+}
+
 class DatabaseScreen extends StatefulWidget {
   const DatabaseScreen({super.key});
 
@@ -245,24 +268,32 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
   }
 
   Future<void> _shareProfile() async {
-    final Map<String, dynamic> exportData = {
-      'firstName': widget.profile['firstName'] ?? '',
-      'lastName': widget.profile['lastName'] ?? '',
-      'middleName': widget.profile['middleName'] ?? '',
-      'description': widget.profile['description'] ?? '',
-      'notes': notes,
-    };
+    final firstName = widget.profile['firstName'] ?? '';
+    final lastName = widget.profile['lastName'] ?? '';
+    final middleName = widget.profile['middleName'] ?? '';
+    final description = widget.profile['description'] ?? '';
 
+    String? imageBase64;
     if (imagePath != null && File(imagePath!).existsSync()) {
       try {
         final bytes = await File(imagePath!).readAsBytes();
-        exportData['imageBase64'] = base64Encode(bytes);
+        imageBase64 = base64Encode(bytes);
       } catch (e) {
       }
     }
 
-    final jsonString = jsonEncode(exportData);
-    await Clipboard.setData(ClipboardData(text: jsonString));
+    final plainText = encodeProfileToText(
+      firstName: firstName,
+      lastName: lastName,
+      middleName: middleName,
+      description: description,
+      notes: notes,
+      imageBase64: imageBase64,
+    );
+
+    final encoded = base64Encode(utf8.encode(plainText));
+
+    await Clipboard.setData(ClipboardData(text: encoded));
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
