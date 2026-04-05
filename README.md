@@ -32,8 +32,8 @@
 ### 1. Установка
 
 bash```
-git clone https://github.com/festW099/ddna.git
-cd ddna
+git clone https://github.com/festW099/dDNA.git
+cd dDNA
 flutter pub get
 flutter run```
 
@@ -42,7 +42,7 @@ flutter run```
 ## Вклад в проект
 
 Вы можете помочь:
-- сообщить об идее или ошибке через [Issues](https://github.com/festW099/ddna/issues)
+- сообщить об идее или ошибке через [Issues](https://github.com/festW099/dDNA/issues)
 - предложить дизайн-улучшения
 - помочь с тестированием, если у вас есть особенности памяти или внимания
 
