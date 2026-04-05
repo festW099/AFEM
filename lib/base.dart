@@ -364,7 +364,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 50),
                 ...notes.map(
                   (note) => Container(
                     width: double.infinity,
@@ -380,6 +380,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 40),
               ],
             ],
           ),
@@ -612,6 +613,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
               child: const Text('СОХРАНИТЬ'),
             ),
+            
+            const SizedBox(height: 40),
           ],
         ),
       ),
