@@ -598,6 +598,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             TextButton(
               onPressed: addNote,
+              style: TextButton.styleFrom(foregroundColor: Colors.white),
               child: const Text('Добавить заметку'),
             ),
 
@@ -605,6 +606,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             ElevatedButton(
               onPressed: save,
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.white10,
+              ),
               child: const Text('СОХРАНИТЬ'),
             ),
           ],
